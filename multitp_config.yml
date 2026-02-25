@@ -1,0 +1,9 @@
+server:
+  ip: 0.0.0.0
+  port: 24436
+
+rooms:
+  max_rooms: 32
+  max_clients_per_room: 8
+  code_length: 6
+
