@@ -1,7 +1,10 @@
 import asyncio
 from picows import ws_create_server, WSFrame, WSTransport, WSListener, WSMsgType, WSUpgradeRequest
+import pickle
 
 import yaml
+
+from const import *
 
 with open("multitp_config.yml") as stream:
     try:
@@ -34,8 +37,9 @@ class ClientListener(WSListener):
         if frame.msg_type == WSMsgType.CLOSE:
             transport.send_close(frame.get_close_code(), frame.get_close_message())
             transport.disconnect()
-        else:
-            transport.send(frame.msg_type, frame.get_payload_as_bytes())
+        elif frame.msg_type == WSMsgType.BINARY:
+            d = pickle.loads(frame.get_payload_as_bytes())
+            print(transport.underlying_transport.get_extra_info('peername'), d)
 
 async def main():
     def listener_factory(r: WSUpgradeRequest):
